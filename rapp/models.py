@@ -1,7 +1,20 @@
 from django.db import models
+from django.contrib.auth.models import User
 from django.contrib.auth.models import User #Help in using Django's provided model to handle users credantials
 
 # Create your models here.
+class clients(models.Model):
+	chx = (
+		('1','Particulier'),
+		('2','Entreprise'),
+	)
+	nom = models.CharField("Nom du Client", max_length= 50)
+	prenom = models.CharField("Prenom du Client", max_length = 50)
+	tel = models.CharField("Telephone du Client", max_length = 50)
+	email = models.EmailField("Email du client", max_length = 100)
+	adresse = models.CharField("Adresse du client", max_length= 60)
+	type_de_client = models.IntegerField("Type de Client",choices= chx)
+
 
 class linkSOGEBANK(models.Model):
 	name = models.CharField("Nom du fichier SOGEBANK telecharge",max_length=30,unique=True)
