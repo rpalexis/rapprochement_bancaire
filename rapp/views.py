@@ -13,10 +13,12 @@ from django.contrib.auth.models import User
 APP_DIR = os.path.dirname(__file__)  # get current directory
 #file_path = os.path.join(APP_DIR, 'baz.txt')  || File path to use in searching uploaded's file
 
+
 def uploadFile(f,name="fich.xls"):
     with open(APP_DIR+"/files/"+name,'wb+') as des:
         for chunk in f.chunks():
             des.write(chunk)
+
 
 #SOGEBANK's method for operations
 def getValidLineSOGEBANK(sheet):
@@ -31,6 +33,7 @@ def getValidLineSOGEBANK(sheet):
                     tmp = [row[6],row[7],row[9],row[13],row[15]]
                     fil.append(tmp)
     return fil
+
 
 def putInLineSOGEBANK(tab): #Put in line SOGEBANK's file important infomations
     final = []
@@ -50,9 +53,11 @@ def putInLineSOGEBANK(tab): #Put in line SOGEBANK's file important infomations
     #Removing '-' sign preventing convertion to fload
     return final
 
+
 def handle_SOGEBANK(sheet):
     return putInLineSOGEBANK(getValidLineSOGEBANK(sheet))
 #SOGEBANK's method for operations
+
 
 #Quickbooks version test handling
 def handle_QuickBooksv1(sheet):
@@ -64,6 +69,7 @@ def handle_QuickBooksv1(sheet):
 #Quickbooks version test handling
 
 
+
 #Comparaison
 def convertingTOFloat(values):
     try:
@@ -73,6 +79,8 @@ def convertingTOFloat(values):
         r1 = values.replace(" ","")
         r2 = r1.replace(",",".")
         return float(r2)
+
+
 def comparingFiles(quickBv1,sogebank):
     Cmp = []
     InCmp = []
@@ -80,16 +88,17 @@ def comparingFiles(quickBv1,sogebank):
             for j in range(len(sogebank)):#SOGEBANK
                 if quickBv1[i][2] == 'Expense':
                     if (convertingTOFloat(quickBv1[i][9])*-1) == convertingTOFloat(sogebank[j][3]):
-                        dict = {'Transaction':quickBv1[i][2],'Posting':quickBv1[i][4],'Name':quickBv1[i][5],'Split':quickBv1[i][8],'Amount':quickBv1[i][9],'Date Eff':sogebank[j][0],'Cheque':sogebank[j][1],'Description':sogebank[j][2],'Debit':sogebank[j][3],'Credit':sogebank[j][4]}
+                        dict = {'Transaction':quickBv1[i][2],'Name':quickBv1[i][5],'Split':quickBv1[i][8],'Amount':convertingTOFloat(quickBv1[i][9])*-1,'Date Eff':sogebank[j][0],'Cheque':sogebank[j][1],'Description':sogebank[j][2],'Debit':sogebank[j][3],'Credit':sogebank[j][4]}
                         Cmp.append(dict)
                         # print(str(quickBv1[i][2])+" "+str(quickBv1[i][4])+" "+str(quickBv1[i][5])+" "+str(quickBv1[i][8])+" "+str(quickBv1[i][9])+" "+str(sogebank[j][0])+" "+str(sogebank[j][1])+" "+str(sogebank[j][2])+" "+str(sogebank[j][3])+" "+str(sogebank[j][4]))
                     else:
-                        dict2 = {'Transaction':quickBv1[i][2],'Posting':quickBv1[i][4],'Name':quickBv1[i][5],'Split':quickBv1[i][8],'Amount':quickBv1[i][9],'Date Eff':sogebank[j][0],'Cheque':sogebank[j][1],'Description':sogebank[j][2],'Debit':sogebank[j][3],'Credit':sogebank[j][4]}
+                        dict2 = {'Transaction':quickBv1[i][2],'Name':quickBv1[i][5],'Split':quickBv1[i][8],'Amount':convertingTOFloat(quickBv1[i][9])*-1,'Date Eff':sogebank[j][0],'Cheque':sogebank[j][1],'Description':sogebank[j][2],'Debit':sogebank[j][3],'Credit':sogebank[j][4]}
                         InCmp.append(dict2)
     rslt = []
     rslt.append({'cmp':Cmp,'incmp':InCmp})
     return rslt
 #Comparaison
+
 
 #NamesFilesFUnnctions
 def namesFiles(filename):
@@ -106,6 +115,8 @@ def namesFiles(filename):
 
     return nomFile
 #NamesFilesFUnnctions
+
+
 def excel_handle(request):
     if request.method == 'POST':
         # print(request.POST['cmpname'])
@@ -124,7 +135,7 @@ def excel_handle(request):
         b = linqQUICKBOOKS.objects.get(name= vldNameQuick)
 
         #getConnectedUser
-        user = User.objects.get(username="admin")
+        user = User.objects.get(username="admin") #Charge uniquement les comparaison de l'utilisateur admin
         #getConnectedUser
 
         #CreateLink for comparaison between files
@@ -177,5 +188,5 @@ def descripComp(request,indice):
 
     egal = zz[0]['cmp']
     inegal = zz[0]['incmp']
-    return render(request,'app/show.html',{'ine':inegal,'equal':egal})
-    # return JsonResponse({'ss':comparingFiles(qq,soge)})
+    # return render(request,'app/show.html',{'ine':inegal,'equal':egal})
+    return JsonResponse({'ss':comparingFiles(qq,soge)})
