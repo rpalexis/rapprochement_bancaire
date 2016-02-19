@@ -14,6 +14,7 @@ class clients(models.Model):
 	email = models.EmailField("Email du client", max_length = 100)
 	adresse = models.CharField("Adresse du client", max_length= 60)
 	type_de_client = models.IntegerField("Type de Client",choices= chx)
+	compte = models.ForeignKey(User,on_delete=models.CASCADE,verbose_name="Proprietaire de la comparaison")
 
 
 class linkSOGEBANK(models.Model):
@@ -30,7 +31,7 @@ class comparaison(models.Model):
 		verbose_name="Reference du fichier SOGEBANK",)
 	cf_link_QUICKBOOKS = models.ForeignKey(linqQUICKBOOKS,on_delete=models.CASCADE,
 		verbose_name="Reference du fichier QUICKBOOKS",)
-	own_by = models.ForeignKey(User,on_delete=models.CASCADE,verbose_name="Proprietaire de la comparaison")
+	own_by = models.ForeignKey(clients,on_delete=models.CASCADE,verbose_name="Proprietaire de la comparaison")
 	ended = models.IntegerField("Si la comparaison a ete valide")
 	dateValidate = models.DateTimeField(null=True) #date marquant la fin de la comparaison
 
