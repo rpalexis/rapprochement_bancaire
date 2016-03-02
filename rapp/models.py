@@ -2,11 +2,12 @@ from django.db import models
 from django.contrib.auth.models import User
 from django.contrib.auth.models import User #Help in using Django's provided model to handle users credantials
 
+
 # Create your models here.
 class clients(models.Model):
 	chx = (
-		('1','Particulier'),
-		('2','Entreprise'),
+		(1,'Particulier'),
+		(2,'Entreprise'),
 	)
 	nom = models.CharField("Nom du Client", max_length= 50)
 	prenom = models.CharField("Prenom du Client", max_length = 50)
@@ -21,9 +22,11 @@ class linkSOGEBANK(models.Model):
 	name = models.CharField("Nom du fichier SOGEBANK telecharge",max_length=30,unique=True)
 	added_Date = models.DateTimeField(auto_now=True)
 
+
 class linqQUICKBOOKS(models.Model):
 	name = models.CharField("Nom du fichier QUICKBOOKS telecharge",max_length=30,unique=True)
 	added_Date = models.DateTimeField(auto_now=True)
+
 
 class comparaison(models.Model):
 	nomComparaison = models.CharField(max_length=40)
@@ -35,7 +38,9 @@ class comparaison(models.Model):
 	ended = models.IntegerField("Si la comparaison a ete valide")
 	dateValidate = models.DateTimeField(null=True) #date marquant la fin de la comparaison
 
+
 class contenuSOGEBANK(models.Model):
+	cfFile = models.ForeignKey(linkSOGEBANK,on_delete=models.CASCADE,verbose_name="CfFiles")
 	date = models.DateField()
 	no_cheque = models.CharField("No du Cheque", max_length=30)
 	description = models.TextField("Description")
@@ -43,7 +48,9 @@ class contenuSOGEBANK(models.Model):
 	crebit = models.FloatField("Montant en decimal du crebit")
 	solde = models.FloatField("Montant en decimal du crebit")
 
+
 class contenuQUICKBOOKS(models.Model):
+	cfFile = models.ForeignKey(linqQUICKBOOKS,on_delete=models.CASCADE,verbose_name="CfFiles")
 	date = models.DateField()
 	type_transaction = models.CharField(max_length=40)
 	name = models.CharField(max_length=40)

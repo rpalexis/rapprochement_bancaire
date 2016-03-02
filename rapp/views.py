@@ -7,8 +7,8 @@ import os
 import random
 from rapp.models import *
 from django.contrib.auth.models import User
-#import pyexcel.ext.xls 
-#import pyexcel.ext.xlsx 
+#import pyexcel.ext.xls
+#import pyexcel.ext.xlsx
 
 APP_DIR = os.path.dirname(__file__)  # get current directory
 #file_path = os.path.join(APP_DIR, 'baz.txt')  || File path to use in searching uploaded's file
@@ -27,10 +27,12 @@ def getValidLineSOGEBANK(sheet):
             row = sheet.row_values(line)
             # print(row)
             #6,7,9,13,14 important Lines in SOGEBANK's sheet
-            if line > 11: 
-                if not ((row[6] == '') and (row[7] == '') and (row[9] == '') and (row[13] == '') and (row[15] == '')):
+            if line > 11:
+                if not ((row[6] == '') and (row[7] == '') and (row[9] == '') and (row[13] == '') and (row[15] == '') and (row[18] == '')):
                     # print(row[6]+"|"+row[7]+"|"+row[9]+"|"+row[13]+"|"+row[15]+"<br />")
-                    tmp = [row[6],row[7],row[9],row[13],row[15]]
+                    # print(row[18])
+                    tmp = [row[6],row[7],row[9],row[13],row[15],row[18]]
+                    # print(tmp)
                     fil.append(tmp)
     return fil
 
@@ -43,6 +45,7 @@ def putInLineSOGEBANK(tab): #Put in line SOGEBANK's file important infomations
                 sov = tab[i]
             else:
                 sov[3]=tab[i][3]
+                sov[5]=tab[i][5]
                 final.append(sov)
     #Removing '-' sign preventing convertion to fload
     for z in range(len(final)):
@@ -56,10 +59,21 @@ def putInLineSOGEBANK(tab): #Put in line SOGEBANK's file important infomations
 
 def handle_SOGEBANK(sheet):
     return putInLineSOGEBANK(getValidLineSOGEBANK(sheet))
+
+def getDateSOGE(chaine):
+    ll= chaine.split("/")#pas correct a cause du test 16
+    return "{0}-{1}-{2}".format("2016",ll[1],ll[0])
 #SOGEBANK's method for operations
 
 
 #Quickbooks version test handling
+def getDateQuickBooks(chaine):
+    # tra = chaine.replace("'","")
+    if chaine != '':
+        ll = chaine.split("/")
+        return "{0}-{1}-{2}".format(ll[2],ll[0],ll[1])
+    else:
+        return "1111-01-11"
 def handle_QuickBooksv1(sheet):
     all = []
     for z in range(sheet.nrows):
@@ -73,12 +87,26 @@ def handle_QuickBooksv1(sheet):
 #Comparaison
 def convertingTOFloat(values):
     try:
-        v = float(values)
-        return v
+        if(values == ''):
+            return 0.00
+        else:
+            v = float(values)
+            return v
     except:
-        r1 = values.replace(" ","")
-        r2 = r1.replace(",",".")
+        r1 = values.replace(" ", "")
+        r2 = r1.replace(",", ".")
         return float(r2)
+
+def convertingTOFloatBis(values):
+    try:
+        if(values == ''):
+            return 0.00
+        else:
+            v = float(values)
+            return v
+    except:
+        r1 = values.replace(",", "")
+        return float(r1)
 
 
 def comparingFiles(quickBv1,sogebank):
@@ -97,8 +125,24 @@ def comparingFiles(quickBv1,sogebank):
     rslt = []
     rslt.append({'cmp':Cmp,'incmp':InCmp})
     return rslt
+
+def comparingFromDB()
 #Comparaison
 
+
+#Load xlsx's Saved Content to the database
+def loadFilesContents2DB(quickBv1,sogebank,sogeIDF,quickIDF):
+    # print(quickBv1)
+    for i in range(len(quickBv1)):
+        # print(quickBv1[i])
+        # print(quickBv1[i])
+        qui = contenuQUICKBOOKS(date = getDateQuickBooks(quickBv1[i][1]), type_transaction = quickBv1[i][2], name = quickBv1[i][5], num = quickBv1[i][3], posting = quickBv1[i][4], memo = quickBv1[i][6], account = quickBv1[i][7], split = quickBv1[i][8], montant = convertingTOFloat(quickBv1[i][9]), cfFile = quickIDF)
+        qui.save()
+
+    for i in range(len(sogebank)):
+        so = contenuSOGEBANK(date = getDateSOGE(sogebank[i][0]) , no_cheque = sogebank[i][1] , description = sogebank[i][2] , debit = convertingTOFloatBis(sogebank[i][3]) , crebit = convertingTOFloatBis(sogebank[i][4]) , solde = convertingTOFloatBis(sogebank[i][5]), cfFile = sogeIDF)
+        so.save()
+#Load xlsx's Saved Content to the database
 
 #NamesFilesFUnnctions
 def namesFiles(filename):
@@ -122,7 +166,7 @@ def excel_handle(request):
         # print(request.POST['cmpname'])
         vldNameSog = namesFiles(str(request.FILES['soge']))
         vldNameQuick = namesFiles(str(request.FILES['quick']))
-        
+
         uploadFile(request.FILES['soge'],vldNameSog)#uploadSogeFiles
         uploadFile(request.FILES['quick'],vldNameQuick)#uploadQuickBooks
 
@@ -137,14 +181,14 @@ def excel_handle(request):
         #getConnectedUser
         user = User.objects.get(username="admin") #Charge uniquement les comparaison de l'utilisateur admin
         #getConnectedUser
-
+        clian = clients.objects.get(compte = user)
         #CreateLink for comparaison between files
-        compC = comparaison(nomComparaison = request.POST['cmpname'],cf_link_SOGEBANK=c, cf_link_QUICKBOOKS=b,ended=0,own_by = user)
+        compC = comparaison(nomComparaison = request.POST['cmpname'],cf_link_SOGEBANK=c, cf_link_QUICKBOOKS=b,ended=0,own_by = clian)
         compC.save()
 
         #CreateLink for comparaison between files
 
-        
+
         # print(quickB)
         return HttpResponse("<strong>Telechargement du fichier reussi retourne au <a href='/excel/dashboard/'>Dashboard</a></strong>")
     else:
@@ -170,6 +214,8 @@ def descripComp(request,indice):
     comp = comparaison.objects.get(id = int(indice))
     sogeFile = comp.cf_link_SOGEBANK.name
     quickFile = comp.cf_link_QUICKBOOKS.name
+    sogeIDF = comp.cf_link_SOGEBANK
+    quickIDF = comp.cf_link_QUICKBOOKS
     print(sogeFile+" "+quickFile)
 
     adr1 = os.path.join(APP_DIR, 'files/'+sogeFile)
@@ -177,7 +223,7 @@ def descripComp(request,indice):
 
     so = xlrd.open_workbook(adr1)
     qb = xlrd.open_workbook(adr2)
-    
+
     soI = so.sheet_by_index(0)
     qbI = qb.sheet_by_index(0)
 
@@ -185,6 +231,7 @@ def descripComp(request,indice):
     qq = handle_QuickBooksv1(qbI)
 
     zz = comparingFiles(qq,soge)
+    loadFilesContents2DB(qq,soge,sogeIDF,quickIDF)#chargement du contenu du fichier dans la table correspondant
 
     egal = zz[0]['cmp']
     inegal = zz[0]['incmp']
