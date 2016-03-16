@@ -131,7 +131,7 @@ def comparingFiles(quickBv1,sogebank):
                     if (convertingTOFloat(quickBv1[i][9])*-1) == convertingTOFloat(sogebank[j][3]):
                         occEquality+=1 #Know the number of Occurence
                         dicQuicks = {'Transaction':quickBv1[i][2],'Name':quickBv1[i][5],'Split':quickBv1[i][8],'Amount':convertingTOFloat(quickBv1[i][9])*-1}
-                        lisSoge.append({'Date Eff':sogebank[j][0],'Cheque':sogebank[j][1],'Description':sogebank[j][2],'Debit':sogebank[j][3],'Credit':sogebank[j][4]})
+                        lisSoge.append({'DateEff':sogebank[j][0],'Cheque':sogebank[j][1],'Description':sogebank[j][2],'Debit':sogebank[j][3],'Credit':sogebank[j][4]})
 
                         # dict = {'Transaction':quickBv1[i][2],'Name':quickBv1[i][5],'Split':quickBv1[i][8],'Amount':convertingTOFloat(quickBv1[i][9])*-1,'Date Eff':sogebank[j][0],'Cheque':sogebank[j][1],'Description':sogebank[j][2],'Debit':sogebank[j][3],'Credit':sogebank[j][4]}
                         # print(str(quickBv1[i][2])+" "+str(quickBv1[i][4])+" "+str(quickBv1[i][5])+" "+str(quickBv1[i][8])+" "+str(quickBv1[i][9])+" "+str(sogebank[j][0])+" "+str(sogebank[j][1])+" "+str(sogebank[j][2])+" "+str(sogebank[j][3])+" "+str(sogebank[j][4]))

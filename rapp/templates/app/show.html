@@ -40,15 +40,14 @@
                                 <table class="table">
                                     <thead>
                                         <tr>
-                                            <th>Posting</th>
-                                            <th>Description</th>
-                                            <th>Name</th>
-                                            <th>Credit</th>
-                                            <th>Split</th>
                                             <th>Transaction</th>
+                                            <th>Split</th>
+                                            <th>Name</th>
                                             <th>Amount</th>
+                                            <th>Date Eff</th>
                                             <th>Cheque</th>
                                             <th>Debit</th>
+                                            <th>Credit</th>
                                         </tr>
                                     </thead>
                                     <tbody>
@@ -56,7 +55,7 @@
                                         {% for egala in equal %}
                                         <tr class="warning">
                                           {% if egala.occ == 1%}
-                                                <td>{{ egala.Posting }}</td>
+                                                <td>{{ egala.Transaction }}</td>
                                                 <td>{{ egala.Description }}</td>
                                                 <td>{{ egala.Name }}</td>
                                                 <td>{{ egala.Credit }}</td>
@@ -66,19 +65,20 @@
                                                 <td>{{ egala.Cheque }}</td>
                                                 <td>{{ egala.Debit }}</td>
                                             {% endif %}
-                                          {% if egala.occ > 1%}
-                                                <td>{{ egala.dicQuicks.Posting }}</td>
-                                                <td>{{ egala.dicQuicks.Description }}</td>
-                                                <td>{{ egala.dicQuicks.Name }}</td>
-                                                <td>{{ egala.dicQuicks.Credit }}</td>
-                                                <td colspan="4">{{ egala.Split }}</td>
-                                                <td colspan="4">{{ egala.Transaction }}</td>
-                                                <td colspan="4">{{ egala.Amount }}</td>
-                                                <td colspan="4">{{ egala.Cheque }}</td>
-                                                <td colspan="4">{{ egala.Debit }}</td>
-                                          {% endif %}
-
                                         </tr>
+                                        <tr>
+                                        {% if egala.occ > 1%}
+                                              <td>{{ egala.dicQuicks.Transaction }}</td>
+                                              <td>{{ egala.dicQuicks.Split }}</td>
+                                              <td>{{ egala.dicQuicks.Name }}</td>
+                                              <td>{{ egala.dicQuicks.Amount }}</td>
+                                              <td>
+                                                {%for itm in egala.corres%}
+                                                  {{itm.DateEff}}-- {{ itm.Cheque }} -- {{ itm.debit }} -- {{ itm.credit }}<br/>
+                                                {% endfor %}
+                                              </td>
+                                        {% endif %}
+                                      </tr>
                                         {% endfor%}
 
                                         {% for egala in ine %}
