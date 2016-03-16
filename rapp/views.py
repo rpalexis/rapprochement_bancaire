@@ -112,16 +112,35 @@ def convertingTOFloatBis(values):
 def comparingFiles(quickBv1,sogebank):
     Cmp = []
     InCmp = []
+
     for i in range(len(quickBv1)):#QuickBooks
+            occEquality = 0 #Count the number of occurence when comparing
+            occInfo = {}
+            lisSoge = []
             for j in range(len(sogebank)):#SOGEBANK
                 if quickBv1[i][2] == 'Expense':
                     if (convertingTOFloat(quickBv1[i][9])*-1) == convertingTOFloat(sogebank[j][3]):
-                        dict = {'Transaction':quickBv1[i][2],'Name':quickBv1[i][5],'Split':quickBv1[i][8],'Amount':convertingTOFloat(quickBv1[i][9])*-1,'Date Eff':sogebank[j][0],'Cheque':sogebank[j][1],'Description':sogebank[j][2],'Debit':sogebank[j][3],'Credit':sogebank[j][4]}
-                        Cmp.append(dict)
+                        occEquality+=1 #Know the number of Occurence
+                        dicQuicks = {'Transaction':quickBv1[i][2],'Name':quickBv1[i][5],'Split':quickBv1[i][8],'Amount':convertingTOFloat(quickBv1[i][9])*-1}
+                        lisSoge.append({'Date Eff':sogebank[j][0],'Cheque':sogebank[j][1],'Description':sogebank[j][2],'Debit':sogebank[j][3],'Credit':sogebank[j][4]})
+
+                        # dict = {'Transaction':quickBv1[i][2],'Name':quickBv1[i][5],'Split':quickBv1[i][8],'Amount':convertingTOFloat(quickBv1[i][9])*-1,'Date Eff':sogebank[j][0],'Cheque':sogebank[j][1],'Description':sogebank[j][2],'Debit':sogebank[j][3],'Credit':sogebank[j][4]}
                         # print(str(quickBv1[i][2])+" "+str(quickBv1[i][4])+" "+str(quickBv1[i][5])+" "+str(quickBv1[i][8])+" "+str(quickBv1[i][9])+" "+str(sogebank[j][0])+" "+str(sogebank[j][1])+" "+str(sogebank[j][2])+" "+str(sogebank[j][3])+" "+str(sogebank[j][4]))
+                        occInfo = {
+                        'occ': occEquality,
+                        'dicQuicks':dicQuicks,
+                        'corres': lisSoge
+                        }
+                        # print("Moi")
+                        # if j == ((len(sogebank))-1):
+                        #
+                        #     Cmp.append(occInfo)#Recoit les Occurences
                     else:
-                        dict2 = {'Transaction':quickBv1[i][2],'Name':quickBv1[i][5],'Split':quickBv1[i][8],'Amount':convertingTOFloat(quickBv1[i][9])*-1,'Date Eff':sogebank[j][0],'Cheque':sogebank[j][1],'Description':sogebank[j][2],'Debit':sogebank[j][3],'Credit':sogebank[j][4]}
-                        InCmp.append(dict2)
+                        # dict2 = {'Transaction':quickBv1[i][2],'Name':quickBv1[i][5],'Split':quickBv1[i][8],'Amount':convertingTOFloat(quickBv1[i][9])*-1,'Date Eff':sogebank[j][0],'Cheque':sogebank[j][1],'Description':sogebank[j][2],'Debit':sogebank[j][3],'Credit':sogebank[j][4]}
+                        dict2 = {'Transaction':quickBv1[i][2],'Name':quickBv1[i][5],'Split':quickBv1[i][8],'Amount':convertingTOFloat(quickBv1[i][9])*-1}
+                        InCmp.append(dict2)#Thinking About
+            if len(occInfo) != 0:#Adding found Occurences
+                Cmp.append(occInfo)#Recoit les Occurences
     rslt = []
     rslt.append({'cmp':Cmp,'incmp':InCmp})
     return rslt
