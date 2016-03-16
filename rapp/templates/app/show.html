@@ -31,7 +31,7 @@
             		<div class="col-lg-12">
                     <div class="panel panel-default">
                         <div class="panel-heading">
-                            Rapprochement 
+                            Rapprochement
                         </div>
                         <!--Primaire /.panel-heading -->
 
@@ -52,17 +52,32 @@
                                         </tr>
                                     </thead>
                                     <tbody>
+                                        <tr>Expenses</tr>
                                         {% for egala in equal %}
                                         <tr class="warning">
-                                            <td>{{ egala.Posting }}</td>
-                                            <td>{{ egala.Description }}</td>
-                                            <td>{{ egala.Name }}</td>
-                                            <td>{{ egala.Credit }}</td>
-                                            <td>{{ egala.Split }}</td>
-                                            <td>{{ egala.Transaction }}</td>
-                                            <td>{{ egala.Amount }}</td>
-                                            <td>{{ egala.Cheque }}</td>
-                                            <td>{{ egala.Debit }}</td>
+                                          {% if egala.occ == 1%}
+                                                <td>{{ egala.Posting }}</td>
+                                                <td>{{ egala.Description }}</td>
+                                                <td>{{ egala.Name }}</td>
+                                                <td>{{ egala.Credit }}</td>
+                                                <td>{{ egala.Split }}</td>
+                                                <td>{{ egala.Transaction }}</td>
+                                                <td>{{ egala.Amount }}</td>
+                                                <td>{{ egala.Cheque }}</td>
+                                                <td>{{ egala.Debit }}</td>
+                                            {% endif %}
+                                          {% if egala.occ > 1%}
+                                                <td>{{ egala.dicQuicks.Posting }}</td>
+                                                <td>{{ egala.dicQuicks.Description }}</td>
+                                                <td>{{ egala.dicQuicks.Name }}</td>
+                                                <td>{{ egala.dicQuicks.Credit }}</td>
+                                                <td colspan="4">{{ egala.Split }}</td>
+                                                <td colspan="4">{{ egala.Transaction }}</td>
+                                                <td colspan="4">{{ egala.Amount }}</td>
+                                                <td colspan="4">{{ egala.Cheque }}</td>
+                                                <td colspan="4">{{ egala.Debit }}</td>
+                                          {% endif %}
+
                                         </tr>
                                         {% endfor%}
 

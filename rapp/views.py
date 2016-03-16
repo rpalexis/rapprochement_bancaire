@@ -93,9 +93,14 @@ def convertingTOFloat(values):
             v = float(values)
             return v
     except:
-        r1 = values.replace(" ", "")
-        r2 = r1.replace(",", ".")
-        return float(r2)
+        if(values.find(',')!=-1 and values.find('.')!=-1):
+            if(values.find(',')<values.find('.')):
+                corValues = values.replace(",","")
+                return float(corValues)
+        elif values.find(',')!=-1 :
+            r1 = values.replace(" ", "")
+            r2 = r1.replace(",", ".")
+            return float(r2)
 
 def convertingTOFloatBis(values):
     try:
@@ -111,12 +116,16 @@ def convertingTOFloatBis(values):
 
 def comparingFiles(quickBv1,sogebank):
     Cmp = []
+    CmpDepot = []
     InCmp = []
-
+    incomes = [{"rsp":"NO"}]
     for i in range(len(quickBv1)):#QuickBooks
             occEquality = 0 #Count the number of occurence when comparing
+            occEqualityDepot = 0
             occInfo = {}
+            occInfoDepot = {}
             lisSoge = []
+            lisSogeDepot =[]
             for j in range(len(sogebank)):#SOGEBANK
                 if quickBv1[i][2] == 'Expense':
                     if (convertingTOFloat(quickBv1[i][9])*-1) == convertingTOFloat(sogebank[j][3]):
@@ -131,18 +140,32 @@ def comparingFiles(quickBv1,sogebank):
                         'dicQuicks':dicQuicks,
                         'corres': lisSoge
                         }
-                        # print("Moi")
-                        # if j == ((len(sogebank))-1):
-                        #
-                        #     Cmp.append(occInfo)#Recoit les Occurences
                     else:
                         # dict2 = {'Transaction':quickBv1[i][2],'Name':quickBv1[i][5],'Split':quickBv1[i][8],'Amount':convertingTOFloat(quickBv1[i][9])*-1,'Date Eff':sogebank[j][0],'Cheque':sogebank[j][1],'Description':sogebank[j][2],'Debit':sogebank[j][3],'Credit':sogebank[j][4]}
                         dict2 = {'Transaction':quickBv1[i][2],'Name':quickBv1[i][5],'Split':quickBv1[i][8],'Amount':convertingTOFloat(quickBv1[i][9])*-1}
                         InCmp.append(dict2)#Thinking About
+                elif quickBv1[i][2] == 'Income':#They are no incomes values for testing
+                        incomes.append({"rsp":"Yes"})
+                elif quickBv1[i][2] == 'Deposit':
+                    if (convertingTOFloat(quickBv1[i][9])) == convertingTOFloat(sogebank[j][4]):
+                        occEqualityDepot+=1 #Know the number of Occurence
+                        dicQuicksDepot = {'Transaction':quickBv1[i][2],'Name':quickBv1[i][5],'Split':quickBv1[i][8],'Amount':convertingTOFloat(quickBv1[i][9])*-1}
+                        lisSogeDepot.append({'Date Eff':sogebank[j][0],'Cheque':sogebank[j][1],'Description':sogebank[j][2],'Debit':sogebank[j][3],'Credit':sogebank[j][4]})
+                        print(quickBv1[i][9]+" "+sogebank[j][4])
+                        # dict = {'Transaction':quickBv1[i][2],'Name':quickBv1[i][5],'Split':quickBv1[i][8],'Amount':convertingTOFloat(quickBv1[i][9])*-1,'Date Eff':sogebank[j][0],'Cheque':sogebank[j][1],'Description':sogebank[j][2],'Debit':sogebank[j][3],'Credit':sogebank[j][4]}
+                        # print(str(quickBv1[i][2])+" "+str(quickBv1[i][4])+" "+str(quickBv1[i][5])+" "+str(quickBv1[i][8])+" "+str(quickBv1[i][9])+" "+str(sogebank[j][0])+" "+str(sogebank[j][1])+" "+str(sogebank[j][2])+" "+str(sogebank[j][3])+" "+str(sogebank[j][4]))
+                        occInfoDepot = {
+                        'occ': occEquality,
+                        'dicQuicks':dicQuicks,
+                        'corres': lisSogeDepot
+                        }
+
             if len(occInfo) != 0:#Adding found Occurences
                 Cmp.append(occInfo)#Recoit les Occurences
+            if len(occInfoDepot) != 0:
+                CmpDepot.append(occInfoDepot)
     rslt = []
-    rslt.append({'cmp':Cmp,'incmp':InCmp})
+    rslt.append({'cmp':Cmp,'incmp':InCmp,'incomes':incomes,'depotCmp':CmpDepot})
     return rslt
 
 # def comparingFromDB()
@@ -254,5 +277,7 @@ def descripComp(request,indice):
 
     egal = zz[0]['cmp']
     inegal = zz[0]['incmp']
-    # return render(request,'app/show.html',{'ine':inegal,'equal':egal})
-    return JsonResponse({'ss':comparingFiles(qq,soge)})
+    depotC = zz[0]['depotCmp']
+    rev = zz[0]['incomes']
+    return render(request,'app/show.html',{'ine':inegal,'equal':egal,'dep':depotC,'revenue':rev})
+    # return JsonResponse({'ss':comparingFiles(qq,soge)})
