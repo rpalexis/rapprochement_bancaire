@@ -126,7 +126,7 @@ def comparingFiles(quickBv1,sogebank):
     rslt.append({'cmp':Cmp,'incmp':InCmp})
     return rslt
 
-def comparingFromDB()
+# def comparingFromDB()
 #Comparaison
 
 
