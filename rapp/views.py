@@ -165,7 +165,7 @@ def comparingFiles(quickBv1,sogebank):
             if len(occInfoDepot) != 0:
                 CmpDepot.append(occInfoDepot)
     rslt = []
-    rslt.append({'cmp':Cmp,'incmp':InCmp,'incomes':incomes,'depotCmp':CmpDepot})
+    rslt.append({'cmp':Cmp,'incmpExp':InCmp,'incomes':incomes,'depotCmp':CmpDepot})
     return rslt
 
 # def comparingFromDB()
@@ -276,7 +276,7 @@ def descripComp(request,indice):
     loadFilesContents2DB(qq,soge,sogeIDF,quickIDF)#chargement du contenu du fichier dans la table correspondant
 
     egal = zz[0]['cmp']
-    inegal = zz[0]['incmp']
+    inegal = zz[0]['incmpExp']
     depotC = zz[0]['depotCmp']
     rev = zz[0]['incomes']
     return render(request,'app/show.html',{'ine':inegal,'equal':egal,'dep':depotC,'revenue':rev})
