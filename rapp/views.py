@@ -143,7 +143,14 @@ def comparingFiles(quickBv1,sogebank):
                     else:
                         # dict2 = {'Transaction':quickBv1[i][2],'Name':quickBv1[i][5],'Split':quickBv1[i][8],'Amount':convertingTOFloat(quickBv1[i][9])*-1,'Date Eff':sogebank[j][0],'Cheque':sogebank[j][1],'Description':sogebank[j][2],'Debit':sogebank[j][3],'Credit':sogebank[j][4]}
                         dict2 = {'Transaction':quickBv1[i][2],'Name':quickBv1[i][5],'Split':quickBv1[i][8],'Amount':convertingTOFloat(quickBv1[i][9])*-1}
-                        InCmp.append(dict2)#Thinking About
+                        if len(InCmp) >= 1:
+                            # print("Je suis Ayiti")
+                            if InCmp[len(InCmp)-1]['Amount'] != convertingTOFloat(quickBv1[i][9])*-1:
+                                print(InCmp[len(InCmp)-1]['Amount'],quickBv1[i][9])
+                                InCmp.append(dict2)#Thinking About
+                        else:
+                            print(len(InCmp))
+                            InCmp.append(dict2)#Thinking About
                 elif quickBv1[i][2] == 'Income':#They are no incomes values for testing
                         incomes.append({"rsp":"Yes"})
                 elif quickBv1[i][2] == 'Deposit':

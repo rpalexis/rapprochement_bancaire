@@ -114,7 +114,7 @@
                 <div class="sidebar-nav navbar-collapse">
                     <ul class="nav" id="side-menu">
                         <li style = "padding-right:30px;">
-                            <img style="margin-right: 30px" src="{% static 'app/images/logo.png' %}">
+                            <img style="margin-right: 30px" src="{% static 'actions/app/images/logo.png' %}">
                         </li>
                         <li>
                             <a href="/excel/dashboard/"><i class="fa fa-dashboard fa-fw"></i> Dashboard</a>
@@ -179,6 +179,7 @@
     {% block JSFiles%}
     <!-- jQuery -->
     <script src="{% static 'actions/app/bower_components/jquery/dist/jquery.min.js' %}"></script>
+    <script src="{% static 'actions/app/bower_components/jquery/dist/jquery-ui.min.js' %}"></script>
 
     <!-- Bootstrap Core JavaScript -->
     <script src="{% static 'actions/app/bower_components/bootstrap/dist/js/bootstrap.min.js' %}"></script>
@@ -188,6 +189,11 @@
 
     <!-- Custom Theme JavaScript -->
     <script src="{% static 'actions/app/dist/js/sb-admin-2.js' %}"></script>
+    <!-- <script>
+      // $(".haiti").sortabla
+      $( ".haiti" ).sortable();
+      $( ".haiti" ).disableSelection();
+    </script> -->
     {% endblock %}
 
 </body>

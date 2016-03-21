@@ -36,8 +36,89 @@
                         <!--Primaire /.panel-heading -->
 
                         <div class="panel-body">
-                            <div class="table-responsive">
-                                <table class="table">
+                          <div class="row">
+                            <div class="table-responsive col-lg-6">
+                              <!-- Tableau de gauche QuickBooks -->
+                              <table class="table table-bordered">
+                                <thead>
+                                <tr>
+                                    <th>Id</th>
+                                    <th>Transaction</th>
+                                    <th>Split</th>
+                                    <th>Name</th>
+                                    <th>Amount</th>
+                                <tr />
+                              </thead>
+                              <tbody>
+                                <tr><th colspan="5"><strong>Expenses</strong</th></tr>
+                                {%for egala in equal%}
+                                  <tr class="warning">
+                                    <td>{{ forloop.counter0 }}</td>
+                                    <td>{{egala.dicQuicks.Transaction}}</td>
+                                    <td>{{egala.dicQuicks.Split}}</td>
+                                    <td>{{egala.dicQuicks.Name}}</td>
+                                    <td>{{egala.dicQuicks.Amount}}</td>
+                                  </tr>
+                                    {% if egala.occ > 1%}
+                                      {% for m in 'x' %}
+                                        <tr><th colspan="5">  >>>>>>>> </th></tr>
+                                      {%endfor%}
+                                    {% endif%}
+                                 {% endfor %}
+                                 {%for egala in ine%}
+                                 
+                                   <tr class="primary">
+                                     <td>{{ forloop.counter0 }}</td>
+                                     <td>{{egala.Transaction}}</td>
+                                     <td>{{egala.Split}}</td>
+                                     <td>{{egala.Name}}</td>
+                                     <td>{{egala.Amount}}</td>
+                                   </tr>
+                                  {% endfor %}
+
+                                 <tr><th colspan="5"><strong>Incomes</strong</th></tr>
+                                   <tr><th colspan="5"><strong>Pas de revenues detecter</strong</th></tr>
+                                </tbody>
+                              </table>
+                            </div>
+                            <div class="table-responsive col-lg-6">
+                              <!-- Tableau de droite sogebank -->
+                              <table class="table table-bordered">
+                                <thead>
+                                <tr>
+                                    <th>Date</th>
+                                    <th>#Cheque</th>
+                                    <th>Description</th>
+                                    <th>Credit</th>
+                                    <th>Dedit</th>
+                                    <th>Lier</th>
+                                <tr />
+                              </thead>
+                              <tbody>
+                                <tr><th colspan="5"><strong>Expenses</strong</th></tr>
+                                {% for march in equal%}
+                                  {% for vv in march.corres%}
+                                <tr class="warning">
+                                  <td>{{ vv.DateEff }}</td>
+                                  <td>{{ vv.Cheque }}</td>
+                                  <td>{{ vv.Description }}</td>
+                                  <td>{{vv.Credit}}</td>
+                                  <td>{{vv.Debit}}</td>.
+                                  <td><select>
+                                      {% for asd in 'xxxxxxxxxxxxxxxxxxxxxxxx' %}
+                                      <option value="{{forloop.counter0}}">{{forloop.counter0}}</option>
+                                      {% endfor %}
+                                  </select></td>
+                                <tr>
+                                  {% endfor%}
+                                  {% endfor %}
+
+                                </tbody>
+                              </table>
+                            </div>
+                          </div>
+                            <!-- <div class="table-responsive"> -->
+                                <!-- <table class="table">
                                     <thead>
                                         <tr>
                                             <th>Transaction</th>
@@ -95,8 +176,9 @@
                                         </tr>
                                         {% endfor %}
                                     </tbody>
-                                </table>
-                            </div>
+                                </table> -->
+
+                            <!-- </div> -->
                             <!-- /.table-responsive -->
                         </div>
                         <!-- /.panel-body -->
