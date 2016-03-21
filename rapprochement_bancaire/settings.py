@@ -124,3 +124,7 @@ STATIC_URL = '/static/'
 STATICFILES_DIRS = [
     os.path.join(BASE_DIR, 'static')
 ]
+# Mail configuration
+EMAIL_HOST = 'gmail.com'
+EMAIL_HOST_PASSWORD = 'P@$$word123!'
+EMAIL_HOST_USER = 'rpalexis1991'

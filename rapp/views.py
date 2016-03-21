@@ -7,6 +7,7 @@ import os
 import random
 from rapp.models import *
 from django.contrib.auth.models import User
+from django.core.mail import send_mail
 #import pyexcel.ext.xls
 #import pyexcel.ext.xlsx
 
@@ -288,3 +289,9 @@ def descripComp(request,indice):
     rev = zz[0]['incomes']
     return render(request,'app/show.html',{'ine':inegal,'equal':egal,'dep':depotC,'revenue':rev})
     # return JsonResponse({'ss':comparingFiles(qq,soge)})
+
+def sendMail(request):
+    if request.method == 'POST':
+        mail = request.POST.get('mail')
+        send_mail('Subject here', 'Here is the message.', 'rulxphilome.alexis@gmail.com',['chana.philerme@gmail.com'], fail_silently=False)
+    return render(request,'app/sendmail.html',{})

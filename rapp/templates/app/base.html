@@ -138,13 +138,13 @@
                             <a href="#"><i class="fa fa-sitemap fa-fw"></i>Partages<span class="fa arrow"></span></a>
                             <ul class="nav nav-second-level">
                                 <li>
-                                    <a href="#" class="paBon">Telecharger en Excel</a>
+                                    <a href="#" class="xls_send">Telecharger en Excel</a>
                                 </li>
                                 <li>
                                     <a href="#" class="paBon">Telecharger en PDF</a>
                                 </li>
                                 <li>
-                                    <a href="#" class="paBon">Envoyer par Email</a>
+                                    <a href="/excel/sendMail/" class="paBon">Envoyer par Email</a>
                                 </li>
                             </ul>
                             <!-- /.nav-second-level -->
@@ -180,6 +180,7 @@
     <!-- jQuery -->
     <script src="{% static 'actions/app/bower_components/jquery/dist/jquery.min.js' %}"></script>
     <script src="{% static 'actions/app/bower_components/jquery/dist/jquery-ui.min.js' %}"></script>
+    <script src="{% static 'actions/app/bower_components/jquery/dist/jquery.tabletoCSV.js' %}"></script>
 
     <!-- Bootstrap Core JavaScript -->
     <script src="{% static 'actions/app/bower_components/bootstrap/dist/js/bootstrap.min.js' %}"></script>
@@ -189,11 +190,16 @@
 
     <!-- Custom Theme JavaScript -->
     <script src="{% static 'actions/app/dist/js/sb-admin-2.js' %}"></script>
-    <!-- <script>
+    <script>
       // $(".haiti").sortabla
-      $( ".haiti" ).sortable();
-      $( ".haiti" ).disableSelection();
-    </script> -->
+      // $( ".haiti" ).sortable();
+      // $( ".haiti" ).disableSelection();
+      $(".xls_send").click(function(e){
+          e.preventDefault();
+          $(".convert_xls").tableToCSV();
+        });
+
+    </script>
     {% endblock %}
 
 </body>
