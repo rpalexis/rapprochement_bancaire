@@ -240,7 +240,7 @@ def excel_handle(request):
 
 
         # print(quickB)
-        return HttpResponse("<strong>Telechargement du fichier reussi retourne au <a href='/excel/dashboard/'>Dashboard</a></strong>")
+        return HttpResponse("<strong>Telechargement du fichier reussi retourne au <a href='/app/dashboard/'>Dashboard</a></strong>")
     else:
         return render(request,'app/crapp.html',{})
 
